@@ -37,6 +37,8 @@ if ! docker compose version &> /dev/null; then
     exit 1
 fi
 
+echo "WARNING, username and password will not be secure."
+
 read -p "Enter username for the Windows VM: " windowsUsername < /dev/tty
 read -s -p "Enter password for the Windows VM: " windowsPassword < /dev/tty
 echo ""
@@ -62,6 +64,10 @@ curl -fsSL -o oem/NetProfileCleanup.ps1 https://raw.githubusercontent.com/winapp
 curl -fsSL -o oem/RDPApps.reg https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/oem/RDPApps.reg
 curl -fsSL -o oem/install.bat https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/oem/install.bat
 
+sed -i '/^echo\.$/i curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?linkid=2264705&clcid=0x409&culture=en-us&country=us\noffice.exe' oem/install.bat
+# curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?linkid=2264705&clcid=0x409&culture=en-us&country=us
+# office.exe
+
 # Download and configure docker-compose
 curl -fsSL -o docker-compose.yaml https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/compose.yaml
 
@@ -69,6 +75,7 @@ curl -fsSL -o docker-compose.yaml https://raw.githubusercontent.com/winapps-org/
 sed -i 's/CPU_CORES: "4"/CPU_CORES: "2"/' docker-compose.yaml
 sed -i "s/USERNAME: \"MyWindowsUser\"/USERNAME: \"$windowsUsername\"/" docker-compose.yaml
 sed -i "s/PASSWORD: \"MyWindowsPassword\"/PASSWORD: \"$windowsPassword\"/" docker-compose.yaml
+sed -i 's/VERSION: "11"/VERSION: "tiny11"/' docker-compose.yaml
 
 # Secure docker-compose file
 chown "$USER:$USER" docker-compose.yaml
@@ -84,7 +91,22 @@ winvm-restart()   { docker compose --file "$(realpath "$winappsVM/docker-compose
 winvm-stop()      { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" stop; }
 winvm-kill()      { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" kill; }
 winvm-create()    { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" up -d; }
-winvm-logs()     { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" logs -f; }
+winvm-logs()      { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" logs -f; }
+winvm-rdp()       { xfreerdp /v:localhost /u:"$windowsUsername" /p:"$windowsPassword" /cert:tofu; }
+winvm-help() {
+  cat <<HELP
+winvm-start      : Start the Windows VM container
+winvm-pause      : Pause the Windows VM container
+winvm-unpause    : Unpause the Windows VM container
+winvm-restart    : Restart the Windows VM container
+winvm-stop       : Stop the Windows VM container
+winvm-kill       : Force kill the Windows VM container
+winvm-create     : Create and start the Windows VM container in detached mode
+winvm-logs       : Show logs for the Windows VM container
+winvm-rdp        : Connect to the Windows VM via RDP
+winvm-help       : Show this help message
+HELP
+}
 EOF
 )
 
@@ -120,6 +142,9 @@ sed -i "s/RDP_PASS=\"MyWindowsPassword\"/RDP_PASS=\"$windowsPassword\"/" winapps
 # Secure winapps.conf
 chown "$USER:$USER" winapps.conf
 chmod 600 winapps.conf
+
+# delete any old freerdp certificate for localhost
+rm -f "$HOME/.config/freerdp/server/localhost_3389.pem"
 # Final instructions
 echo ""
 echo "Setup complete."
