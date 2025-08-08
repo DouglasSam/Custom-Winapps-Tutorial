@@ -2,10 +2,19 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const marked = require('marked');
-const sanitizeHtml = require('sanitize-html');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const getSource = (string, req) => {
+    const window = new JSDOM('').window;
+    const DOMPurify = createDOMPurify(window);
+    const protocol = req.protocol;
+    const host = req.get('host');
+    return DOMPurify.sanitize(string).replace(/%%URL%%/g, `${protocol}://${host}`);
+};
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
@@ -18,21 +27,17 @@ app.get('/', (req, res) => {
     fs.readFile(mdPath, 'utf8', (err, markdown) => {
         if (err) return res.status(500).send('Error loading Markdown file');
 
-        // Convert Markdown to HTML
-        const rawHtml = marked.parse(markdown);
+        const html = marked.parse(getSource(markdown, req));
 
-        // Sanitize HTML to prevent XSS
-        const cleanHtml = sanitizeHtml(rawHtml, {
-            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2']),
-            allowedAttributes: {
-                a: ['href', 'name', 'target'],
-                img: ['src', 'alt'],
-                '*': ['class'] // allow classes for styling
-            },
-            allowedSchemes: ['http', 'https', 'mailto']
-        });
+        res.render('index', { content: html });
+    });
+});
 
-        res.render('index', { content: cleanHtml });
+app.get('/setup.sh', (req, res) => {
+    const scriptPath = path.join(__dirname, 'setup.sh');
+    fs.readFile(scriptPath, 'utf8', (err, data) => {
+        if (err) return res.status(404).send('Script not found');
+        res.type('text/plain').send(getSource(data,req));
     });
 });
 
