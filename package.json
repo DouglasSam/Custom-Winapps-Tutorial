@@ -1,0 +1,21 @@
+{
+  "name": "winapps-installer-tutorial",
+  "version": "1.0.0",
+  "description": "A tutorial and script for installing win apps",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "marked": "^16.1.2",
+    "sanitize-html": "^2.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
