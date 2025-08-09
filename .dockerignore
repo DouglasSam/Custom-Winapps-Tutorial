@@ -4,6 +4,12 @@
 
 .docker-compose.**
 
+src/node_modules
+
+.git
+
+*.tar
+
 .idea
 
 # User-specific stuff

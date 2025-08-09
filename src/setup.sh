@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# If you are viewing this on a website change or add ?CPU_CORES=4&RAM_SIZE=4G to modify cpu cores and ram size
+
 set -e  # Exit immediately on error
 
 # # Prompt for Windows credentials instead of hardcoding
@@ -47,6 +50,8 @@ echo ""
 winapps="$HOME/.config/winapps"
 winappsVM="${winapps}/vm/"
 confURL="%%URL%%/example-winapps.conf"
+cores="%%CPU_CORES%%"
+ram="%%RAM_SIZE%%"
 
 # Install dependencies
 sudo apt update
@@ -63,8 +68,9 @@ curl -fsSL -o oem/Container.reg https://raw.githubusercontent.com/winapps-org/wi
 curl -fsSL -o oem/NetProfileCleanup.ps1 https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/oem/NetProfileCleanup.ps1
 curl -fsSL -o oem/RDPApps.reg https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/oem/RDPApps.reg
 curl -fsSL -o oem/install.bat https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/oem/install.bat
+curl -fsSL -o oem/install-office.bat %%URL%%/install-office.bat
 
-sed -i '/^echo\.$/i curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?linkid=2264705&clcid=0x409&culture=en-us&country=us\noffice.exe' oem/install.bat
+#sed -i '/^echo\.$/i curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?linkid=2264705&clcid=0x409&culture=en-us&country=us\noffice.exe' oem/install.bat
 # curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?linkid=2264705&clcid=0x409&culture=en-us&country=us
 # office.exe
 
@@ -72,7 +78,8 @@ sed -i '/^echo\.$/i curl -fsSL -o office.exe https://go.microsoft.com/fwlink/?li
 curl -fsSL -o docker-compose.yaml https://raw.githubusercontent.com/winapps-org/winapps/refs/heads/main/compose.yaml
 
 # Modify docker-compose settings
-sed -i 's/CPU_CORES: "4"/CPU_CORES: "2"/' docker-compose.yaml
+sed -i "s/RAM_SIZE: \"4G\"/RAM_SIZE: \"$ram\"/" docker-compose.yaml
+sed -i "s/CPU_CORES: \"4\"/CPU_CORES: \"$cores\"/" docker-compose.yaml
 sed -i "s/USERNAME: \"MyWindowsUser\"/USERNAME: \"$windowsUsername\"/" docker-compose.yaml
 sed -i "s/PASSWORD: \"MyWindowsPassword\"/PASSWORD: \"$windowsPassword\"/" docker-compose.yaml
 sed -i 's/VERSION: "11"/VERSION: "tiny11"/' docker-compose.yaml
@@ -92,7 +99,7 @@ winvm-stop()      { docker compose --file "$(realpath "$winappsVM/docker-compose
 winvm-kill()      { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" kill; }
 winvm-create()    { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" up -d; }
 winvm-logs()      { docker compose --file "$(realpath "$winappsVM/docker-compose.yaml")" logs -f; }
-winvm-rdp()       { xfreerdp /v:localhost /u:"$windowsUsername" /p:"$windowsPassword" /cert:tofu; }
+winvm-rdp()       { xfreerdp3 /v:localhost /u:"$windowsUsername" /p:"$windowsPassword" /cert:tofu; }
 winvm-help() {
   cat <<HELP
 winvm-start      : Start the Windows VM container

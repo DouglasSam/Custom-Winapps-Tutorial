@@ -97,6 +97,26 @@ em {
     color: #7f8c8d;
 }
 
+.window-images {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertical alignment within parent */
+    align-items: center;       /* horizontal alignment */
+    height: 100vh;             /* optional: full screen height */
+    margin: 2rem;
+    gap: 1rem;              /* space between images */
+}
+
+.window-images p {
+    margin: 0;                 /* removes default paragraph spacing */
+}
+
+.window-images img {
+    display: block; /* removes tiny gaps below image */
+    max-width: 100%; /* keeps image within container's width */
+    height: auto; /* maintains aspect ratio */
+}
+
 /* Toggle button styling */
 #theme-toggle {
     position: fixed;

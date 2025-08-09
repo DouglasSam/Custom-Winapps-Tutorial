@@ -24,8 +24,10 @@ const getSource = (string, req, sanitize=true) => {
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('trust proxy', true);
 
 app.use('/css', express.static(path.join(__dirname, 'views/css')));
+app.use('/images', express.static(path.join(__dirname, 'views/images')));
 
 // Route to render Markdown securely
 app.get('/', (req, res) => {
@@ -44,7 +46,15 @@ app.get('/setup.sh', (req, res) => {
     const scriptPath = path.join(__dirname, 'setup.sh');
     fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) return res.status(404).send('Script not found');
-        res.type('text/plain').send(getSource(data,req,false));
+
+        const cpuCores = req.query.CPU_CORES || '4';
+        const ramSize = req.query.RAM_SIZE || '4G';
+
+        let source = getSource(data, req, false);
+        source = source.replace(/%%CPU_CORES%%/g, cpuCores);
+        source = source.replace(/%%RAM_SIZE%%/g, ramSize);
+
+        res.type('text/plain').send(source);
     });
 });
 
@@ -56,6 +66,13 @@ app.get('/example-winapps.conf', (req, res) => {
     });
 });
 
+app.get('/install-office.bat', (req, res) => {
+    const scriptPath = path.join(__dirname, 'install-office.bat');
+    fs.readFile(scriptPath, 'utf8', (err, data) => {
+        if (err) return res.status(404).send('Script not found');
+        res.type('text/plain').send(getSource(data,req,false));
+    });
+});
 
 app.listen(PORT, () => {
     const timestamp = new Date().toISOString();
