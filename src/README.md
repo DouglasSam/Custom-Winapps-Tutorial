@@ -116,13 +116,21 @@ When you first reach the desktop, either through rdp or the browser, there shoul
 
 Follow the instructions, and it will do magic win apps configuration.
 
-Afterwards go to the file explorer, go to `C:\OEM` and run the file `install-office.bat`. 
+Since this version of Windows 11 does not have a browser installed, you will need to install office differently.
 
-If that does not work, sorry, you will have to install office manually, which can be hard because this version of Windows 11 does not have a browser installed.
+The easiest way is to open the terminal that popped up and run:
+
+```powershell
+winget install Microsoft.Office
+```
+
+I have also included a script that will install office for you using the download link from Microsofts website, but only use this as a backup option. It is located at `C:\OEM` and run the file `install-office.bat`. 
+
+If neither option works, sorry, you will have to get the installer yourself, which is difficult because of not having a browser.
 
 Wait for office to finish installing before continuing. This can take a while depending on the VM settings, internet and the physical machine.
 
-You might also want to open the applications and follow any pop-ups, e.g. signing into office. I found that when installed through winapps it does not show popups and will seem like the application is frozen.
+You might also want to open the applications and follow any pop-ups, e.g. signing in to office. I found that when installed through winapps it does not show popups and will seem like the application is frozen.
 
 ## Win apps installer
 
@@ -167,13 +175,21 @@ Feel free to have a look at the other application but most probably aren't wante
 
 ![WinApps other applications list](/images/other-apps-list.png)
 
-After that you should be done with the setup, and should be able to see that apps that you selected inside the linux menu.
+After that you should be done with the setup, and should be able to see that apps that you selected inside the linux menu and winapps is successfully installed.
+
+<div class="window-images">
+
+![WinApps working by showing fastfetch](/images/fastfetch.png)
+
+</div>
 
 Once WinApps is installed, a list of additional arguments can be accessed by running `winapps-setup --help`
 
 ## Notes
 
 It is very janky, the opening and moving of windows is not smooth and the windows things might show through at times. It does not seem to be able to handle multiple applications open as different apps, so if you for example open Word and Excel, it will only show one as one application in the taskbar.
+
+Also after shutting down the main computer, it might take a minute or two for windows programs to start up again.
 
 <div class="window-images">
 
@@ -185,4 +201,44 @@ It is very janky, the opening and moving of windows is not smooth and the window
 
 If there are problems, like the window appears frozen you can get to the full desktop by running the windows application, which will launch it through rdp, or by running winvm-rdp in the terminal. Note this will close all applications and open the Linux desktop.
 
-You might need to do this if the application pops something up that win apps does not display. Just launch rdp and open it on there.
+You might need to do this if the application pops something up that win apps does not display. Just launch rdp and open it on there to see what it does.
+
+## Performance
+
+My setup was running on a passively cooled mini pc from 2018 with a 4 core AMD non ryzen CPU with 12GB of DDR3, with a capture card as my display running through OBS on my main system. There was some lag and delay but still usable if you are patient. Running this on a natural display on a more powerful system should be much better.
+
+If you want to try increase the performance of the VM by giving it more CPU cores or RAM, presuming you ran the convenience script, you can run:
+
+```bash
+nano ~/.config/winapps/vm/docker-compose.yml
+```
+
+Then find the lines:
+
+```yaml
+    environment:
+      ...
+      RAM_SIZE=4G
+      CPU_CORES=4
+```
+> The numbers here might be different depending on what you set in the convenience script
+
+Change the numbers to what you want, e.g. `RAM_SIZE=8G` and `CPU_CORES=8` to give it 8GB of RAM and 8 CPU cores, allowing the VM to use more of the host system's resources.
+
+> The RAM_SIZE must end with a G for gigabytes or M for megabytes, e.g. `RAM_SIZE=8G` or `RAM_SIZE=8192M`
+> The CPU_CORES must be a number and cannot be a decimal, e.g. `CPU_CORES=8`
+
+then run:
+
+```bash
+winvm-stop
+winvm-create
+```
+This will recreate the VM with the new settings, all of your data will be kept.
+
+On laptops this would probably make the system run hotter and use more battery, so keep that in mind. If Windows apps are not being used you can always stop the VM using `winvm-stop` to save resources, and then running `winvm-start` when you want to use them again.
+
+If you try launch a windows application and the vm is not running, it will try automatically start the VM and then launch the application, but that did not work in my testing, and I'm not sure why, so just stick to running `winvm-start`.
+
+`winvm-pause` and `winvm-unpause` are alternatives, and will freeze the windown VN, it should still free up resources, but any open applcations will freeze and not be usable until unpaused.
+
