@@ -26,7 +26,7 @@ To view the script [click here](/setup.sh?CPU_CORES=4&RAM_SIZE=4G).
 Either run in the terminal:
 
 ```bash
-curl -fsSL %%URL%%/install.sh | bash
+curl -fsSL %%URL%%/setup.sh | bash
 ```
 
 which will default the VM to use 4 cpu cores and 4GB of RAM,
@@ -34,7 +34,7 @@ which will default the VM to use 4 cpu cores and 4GB of RAM,
 To change run
 
 ```bash
-curl -fsSL %%URL%%/install.sh?CPU_CORES=2&RAM_SIZE=8G | bash
+curl -fsSL %%URL%%/setup.sh?CPU_CORES=2&RAM_SIZE=8G | bash
 ```
 
 which makes the VM use 2 cpu cores and 8GB of RAM, you can change the numbers to suit your needs.
@@ -42,14 +42,14 @@ which makes the VM use 2 cpu cores and 8GB of RAM, you can change the numbers to
 OR download it:
 
 ```bash
-curl -fsSL -o winapps-setup.sh %%URL%%/install.sh
+curl -fsSL -o winapps-setup.sh %%URL%%/setup.sh
 ```
 
 and edit using nano, or your favorite text editor to edit the username and password this setup will give the windows virtual machine. After editing run it using:
 
 ```bash
-sudo chmod +x install.sh
-./install.sh
+sudo chmod +x setup.sh
+./setup.sh
 ```
 
 You will have to run the script twice as it needs to install Docker and change user permissions which require either a log-out or restart.
@@ -132,7 +132,11 @@ The easiest way is to open the terminal that popped up and run:
 winget install Microsoft.Office
 ```
 
-I have also included a script that will install office for you using the download link from Microsofts website, but only use this as a backup option. It is located at `C:\OEM` and run the file `install-office.bat`. 
+> There is a chance this will not work, in my testing it bugged out, and I could not install anything with winget, so I
+> had to use the method below.
+
+I have also included a script that will install office for you using the download link from Microsofts website. It is
+located at `C:\OEM` and run the file `install-office.bat`.
 
 If neither option works, sorry, you will have to get the installer yourself, which is difficult because of not having a browser.
 
@@ -292,3 +296,8 @@ winapps-setup --user --uninstall
 ```
 
 This will remove all the applications. The configuration files will still be there, winn apps source code, freerdp certificates, aliases, and the Windows VM will still be there.
+
+## Issues with this tutorial
+
+If you have any issues with this tutorial or any of the scripts, please open an issue on my
+git [Custom Winapps Tutorial](https://github.com/DouglasSam/Custom-Winapps-Tutorial)
