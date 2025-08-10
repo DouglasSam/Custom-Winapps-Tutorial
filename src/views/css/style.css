@@ -116,6 +116,26 @@ em {
     height: auto; /* maintains aspect ratio */
 }
 
+/* Blockquote styling */
+blockquote {
+    font-style: italic;
+    color: #555;
+    border-left: 4px solid #3498db;
+    padding: 0.5rem 1rem;
+    margin: 1.5rem 0;
+    background-color: #f4f8fc;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* Dark mode */
+body.dark-mode blockquote {
+    color: #ccc;
+    border-left-color: #9cdcfe;
+    background-color: #2a2e3a;
+}
+
+
 /* Toggle button styling */
 #theme-toggle {
     position: fixed;
