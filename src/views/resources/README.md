@@ -15,6 +15,9 @@ The script takes the instructions from [this](https://github.com/winapps-org/win
 
 To view the script [click here](/setup.sh?CPU_CORES=4&RAM_SIZE=4G).
 
+> Note, I am not a professional bash script writer, things could definitely be better, but it works and is easy to use. It is not the most secure and flexible, but it is an easy starting point for most people.
+> You can always download the script and edit it to your liking, or just run the commands in the script manually.
+
 Either run in the terminal:
 
 ```bash
@@ -234,6 +237,9 @@ then run:
 winvm-stop
 winvm-create
 ```
+
+`winvm-stop` can potentially take a while, as it sends a shutdown signal, so is the same thing as shutting down a computer from the start menu.
+
 This will recreate the VM with the new settings, all of your data will be kept.
 
 On laptops this would probably make the system run hotter and use more battery, so keep that in mind. If Windows apps are not being used you can always stop the VM using `winvm-stop` to save resources, and then running `winvm-start` when you want to use them again.
@@ -242,3 +248,42 @@ If you try launch a windows application and the vm is not running, it will try a
 
 `winvm-pause` and `winvm-unpause` are alternatives, and will freeze the windown VN, it should still free up resources, but any open applcations will freeze and not be usable until unpaused.
 
+## Adding new windows applications
+
+To install new applications, you actually have to uninstall winapps first, then run the installer again.
+
+```bash
+winapps-setup --user --uninstall
+```
+
+Then re-run the installer:
+
+```bash
+bash <(curl https://raw.githubusercontent.com/winapps-org/winapps/main/setup.sh)
+```
+
+and follow the instructions again, making sure to select the applications you want to install.
+
+You should not have to touch the Windows VM for this step.
+
+
+## Remove winapps from the system
+
+Presuming you used the convenience script, you can run:
+
+```bash
+curl -fsSL %%URL%%/purge .sh | bash
+```
+
+This will remove the winapps configuration, the aliases and the docker container, the Windows VM all the configuration and files related to it. It will not uninstall Docker.
+
+> NOTE: You will lose all data in the Windows VM, so make sure to back up anything you want to keep from Windows before running this command.
+> This will also remove everything in .bashrc starting from where the convenience script started adding aliases to the end of the file, so if you have added anything to .bashrc after running the convenience script, they will be removed as well.
+
+If you just want to remove winapps, you can run:
+
+```bash
+winapps-setup --user --uninstall
+```
+
+THis will remove all the applications. The configuration files will still be there, winn apps source code, freerdp certificates, aliases, and the Windows VM will still be there.

@@ -31,7 +31,7 @@ app.use('/images', express.static(path.join(__dirname, 'views/images')));
 
 // Route to render Markdown securely
 app.get('/', (req, res) => {
-    const mdPath = path.join(__dirname, 'README.md');
+    const mdPath = path.join(__dirname, 'views/resources/README.md');
 
     fs.readFile(mdPath, 'utf8', (err, markdown) => {
         if (err) return res.status(500).send('Error loading Markdown file');
@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/setup.sh', (req, res) => {
-    const scriptPath = path.join(__dirname, 'setup.sh');
+    const scriptPath = path.join(__dirname, 'views/resources/setup.sh');
     fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) return res.status(404).send('Script not found');
 
@@ -59,7 +59,7 @@ app.get('/setup.sh', (req, res) => {
 });
 
 app.get('/example-winapps.conf', (req, res) => {
-    const scriptPath = path.join(__dirname, 'example-winapps.conf');
+    const scriptPath = path.join(__dirname, 'views/resources/example-winapps.conf');
     fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) return res.status(404).send('Script not found');
         res.type('text/plain').send(getSource(data,req,false));
@@ -67,12 +67,20 @@ app.get('/example-winapps.conf', (req, res) => {
 });
 
 app.get('/install-office.bat', (req, res) => {
-    const scriptPath = path.join(__dirname, 'install-office.bat');
+    const scriptPath = path.join(__dirname, 'views/resources/install-office.bat');
     fs.readFile(scriptPath, 'utf8', (err, data) => {
         if (err) return res.status(404).send('Script not found');
         res.type('text/plain').send(getSource(data,req,false));
     });
 });
+
+app.get('/purge.sh', (req, res) => {
+    const scriptPath = path.join(__dirname, 'views/resources/purge.sh');
+    fs.readFile(scriptPath, 'utf8', (err, data) => {
+        if (err) return res.status(404).send('Script not found');
+        res.type('text/plain').send(getSource(data,req,false));
+    });
+})
 
 app.listen(PORT, () => {
     const timestamp = new Date().toISOString();
