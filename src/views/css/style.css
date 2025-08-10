@@ -102,8 +102,7 @@ em {
     flex-direction: column;
     justify-content: center;   /* vertical alignment within parent */
     align-items: center;       /* horizontal alignment */
-    height: 100vh;             /* optional: full screen height */
-    margin: 2rem;
+    /*margin: 2rem;*/
     gap: 1rem;              /* space between images */
 }
 
@@ -132,6 +131,13 @@ em {
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     transition: background 0.3s;
     z-index: 1000;
+}
+
+code:not([class]) {
+    background-color: #f4f4f4;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
 }
 
 #theme-toggle:hover {
@@ -177,4 +183,9 @@ body.dark-mode strong {
 
 body.dark-mode em {
     color: #aaaaaa;
+}
+
+body.dark-mode code:not([class]) {
+    background-color: #3a3a4d;
+    color: #f8f8f2;
 }

@@ -14,7 +14,9 @@ const getSource = (string, req, sanitize=true) => {
     const protocol = req.protocol;
     const host = req.get('host');
     if (sanitize){
-        return DOMPurify.sanitize(string).replace(/%%URL%%/g, `${protocol}://${host}`);
+        return DOMPurify.sanitize(string.replace(/<blockquote>/g, '%%block%%').replace(/<blockquote>/g, '%%endblock%%'))
+            .replace(/%%URL%%/g, `${protocol}://${host}`)
+            .replace(/%%block%%/g, '<blockquote>').replace(/%%endblock%%/g, '</blockquote>');
     }
     else {
         return string.replace(/%%URL%%/g, `${protocol}://${host}`);
@@ -36,7 +38,7 @@ app.get('/', (req, res) => {
     fs.readFile(mdPath, 'utf8', (err, markdown) => {
         if (err) return res.status(500).send('Error loading Markdown file');
 
-        const html = marked.parse(getSource(markdown, req)).replace('<pre><code class="language-bash">bash &amp;lt;', '<pre><code class="language-bash">bash <');
+        const html = marked.parse(getSource(markdown, req, false)).replace('<pre><code class="language-bash">bash &amp;lt;', '<pre><code class="language-bash">bash <');
 
         res.render('index', { content: html });
     });

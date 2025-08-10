@@ -161,28 +161,28 @@ Afterwards continue until it asks:
 Choose the second option: 
 > Choose specific officially supported applications to set
 
-![First option screen](/images/first-option.png)
+![First option screen](/images/first-option.webp)
 
 This will just avoid bloat of other applications that you may not want to use.
 
 Choose the applications you want to use with spacebar (DO NOT USER ENTER, that will go to the next step).
 
-![WinApps selection screen](/images/select-apps.png)
+![WinApps selection screen](/images/select-apps.webp)
 
 On the **How would you like to handle other detected applications?** screen, you can probably choose:
 > Do not set up any applications
 
-![WinApps other applications screen](/images/other-apps.png)
+![WinApps other applications screen](/images/other-apps.webp)
 
 Feel free to have a look at the other application but most probably aren't wanted. For example these were what was listed for me:
 
-![WinApps other applications list](/images/other-apps-list.png)
+![WinApps other applications list](/images/other-app-list.webp)
 
 After that you should be done with the setup, and should be able to see that apps that you selected inside the linux menu and winapps is successfully installed.
 
 <div class="window-images">
 
-![WinApps working by showing fastfetch](/images/fastfetch.png)
+![WinApps working by showing fastfetch](/images/fastfetch.webp)
 
 </div>
 
@@ -196,9 +196,9 @@ Also after shutting down the main computer, it might take a minute or two for wi
 
 <div class="window-images">
 
-![Word-working](/images/word-working.png)
+![Word-working](/images/word-working.webp)
 
-![Word-and-Excel](/images/word-and-excel.png)
+![Word-and-Excel](/images/word-and-excel.webp)
 
 </div>
 
@@ -286,4 +286,4 @@ If you just want to remove winapps, you can run:
 winapps-setup --user --uninstall
 ```
 
-THis will remove all the applications. The configuration files will still be there, winn apps source code, freerdp certificates, aliases, and the Windows VM will still be there.
+This will remove all the applications. The configuration files will still be there, winn apps source code, freerdp certificates, aliases, and the Windows VM will still be there.
