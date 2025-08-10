@@ -10,10 +10,10 @@ RUN npm install
 
 USER 1000
 
-COPY src/ ./
+COPY src/ ./src/
 
 ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD [ "node", "server.js" ]
+CMD [ "npm", "start" ]

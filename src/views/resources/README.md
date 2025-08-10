@@ -9,7 +9,12 @@ For you convenience I have created a starter script. This script will:
 - Create a compose file which tells docker what to do
 - Create command aliases to start, pause, stop etc. the Windows VM
 - Download the winapps config files
-- Set up aliases for easy managment
+- Set up aliases for easy management
+
+> It is also theoretically possible to run the Windows VM on a different machine (through the same docker setup, or even
+> potentially a hypervisor like proxmox), e.g. a server. This can help with performance and local machine resources.
+> This
+> script will not help with that you will have to find an external tutorial for that.
 
 The script takes the instructions from [this](https://github.com/winapps-org/winapps/blob/main/docs/docker.md#docker) and the main [win apps tutorial](https://github.com/winapps-org/winapps?tab=readme-ov-file#installation) part of the setup and tries to make it as automatic as possible.
 

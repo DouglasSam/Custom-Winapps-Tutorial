@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: markdown:1
+    image: winapps-tut:13
     ports:
       - "3000:3000"
-    volumes:
-      - ./src/:/app

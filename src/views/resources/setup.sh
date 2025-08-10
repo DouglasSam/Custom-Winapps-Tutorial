@@ -160,6 +160,6 @@ echo "1. Open a new terminal window (or run 'source ~/.bashrc')."
 echo "2. Run 'winvm-create' to start the Windows VM."
 echo "3. Once it's running, open http://localhost:8006 in your browser and let Windows install."
 echo "   This may take a while."
-echo "4. After reaching the Windows desktop, install Microsoft Office—either via the browser or through RDP"
+echo "4. Install office through broswer or run 'winvm-rdp' to connect via RDP."
 echo "5. Install win apps using a tutorial"
 
