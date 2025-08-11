@@ -11,6 +11,9 @@ For you convenience I have created a starter script. This script will:
 - Download the winapps config files
 - Set up aliases for easy management
 
+This presumes that your device supports and has enabled virtualization. If not see your motherboard or device manual on
+how to enable it.
+
 > It is also theoretically possible to run the Windows VM on a different machine (through the same docker setup, or even
 > potentially a hypervisor like proxmox), e.g. a server. This can help with performance and local machine resources.
 > This
@@ -126,16 +129,8 @@ Follow the instructions, and it will do magic win apps configuration.
 
 Since this version of Windows 11 does not have a browser installed, you will need to install office differently.
 
-The easiest way is to open the terminal that popped up and run:
-
-```powershell
-winget install Microsoft.Office
-```
-
-> There is a chance this will not work, in my testing it bugged out, and I could not install anything with winget, so I
-> had to use the method below.
-
-I have also included a script that will install office for you using the download link from Microsofts website. It is
+Because of this I have included a script that will install office for you using the download link from Microsoft's
+website. It is
 located at `C:\OEM` and run the file `install-office.bat`.
 
 If neither option works, sorry, you will have to get the installer yourself, which is difficult because of not having a browser.
@@ -145,6 +140,9 @@ Wait for office to finish installing before continuing. This can take a while de
 You might also want to open the applications and follow any pop-ups, e.g. signing in to office. I found that when installed through winapps it does not show popups and will seem like the application is frozen.
 
 ## Win apps installer
+
+Before running the winapps installer, make sure that you have the Windows VM running and that you have no RDP
+connections open to it.
 
 For the main tutorial go [here](https://github.com/winapps-org/winapps?tab=readme-ov-file#step-5-run-the-winapps-installer)
 
@@ -214,6 +212,25 @@ Also after shutting down the main computer, it might take a minute or two for wi
 If there are problems, like the window appears frozen you can get to the full desktop by running the windows application, which will launch it through rdp, or by running winvm-rdp in the terminal. Note this will close all applications and open the Linux desktop.
 
 You might need to do this if the application pops something up that win apps does not display. Just launch rdp and open it on there to see what it does.
+
+To access your files from your home linux directory, for my testing I had an item in This PC called `home on wyse` (wyse
+was the hostname of my linux machine), which was a link to the home directory of the user on the linux machine.
+
+Otherwise, you can type in `\\host.lan\Data\` in the address bar, or go to the `Network` section in the file explorer
+and find links to the home directory there.
+
+<div class="window-images">
+
+![Home on Wyse](/images/home-on-wyse.webp)
+
+![address bar](/images/address-bar.webp)
+
+![Network section](/images/network-selection.webp)
+
+</div>
+
+If you have a compatible file on your linux machine, you should be able to choose open in **winapps program** and it
+should open in the windows application, e.g. a `.docx` file should open in Word, or a `.xlsx` file should open in Excel.
 
 ## Performance
 
