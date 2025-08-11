@@ -3,6 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: winapps-tut:13
+    image: winapps-tut
     ports:
       - "3000:3000"
